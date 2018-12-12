@@ -54,7 +54,7 @@
                     var question = '<div id="question'+ counter +'" class="'+ counter +'">'+
                       '<div class="form-group form-float">'+
                           '<div class="form-line" style="margin-bottom: 5px">'+
-                              '<input type="text" name="questions" class="form-control" placeholder="Question*" required>'+
+                              '<input type="text" name="question'+ counter +'[question]" class="form-control" placeholder="Question*" required>'+
                           '</div>'+
                       '</div>'+
                       '<div id="question'+ counter +'_choice_group">'+
@@ -81,19 +81,25 @@
                     var choices = '<div class="form-group form-float" style="margin-bottom: 0px" id="question'+ id +'_choices'+ counter2 +'">'+
                       '<div class="input-group input-group-sm">'+
                           '<span class="input-group-addon">'+
-                              '<input name=question'+ id +'_answer" type="radio" class="with-gap" id=question'+ id +'_radio'+ counter2 +'" required>'+
+                              '<input type="radio" class="with-gap" id=question'+ id +'_radio'+ counter2 +'">'+
                               '<label for=question'+ id +'_radio'+ counter2 +'">'+'</label>'+
                           '</span>'+
                           '<div class="col-md-8">'+
                             '<div class="form-line">'+
-                                '<input type="text" name="questions_choices" class="form-control" placeholder="Choices*" required>'+
+                                '<input type="text" name="question'+ id +'[choices]['+ counter2 +']" class="form-control" placeholder="Choices*" required>'+
                             '</div>'+
                           '</div>'+
                           '<button value="question'+ id +'_choices'+ counter2 +'" type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float remove_choice">'+
                               '<i class="material-icons">clear</i>'+
                           '</button>'+
                       '</div>'+
-                    '</div>';
+                      '<script type="text/javascript">'+
+                      '$("#question'+ id +'[choices]['+ counter2 +']").bind("change paste keyup", function() {'+
+                      'var val = $(this).val();'+
+                      '$("#question'+ id +'_radio'+ counter2 +'").val(val);'+
+                      '}); $("#question'+ id +'[choices]['+ counter2 +']").val("Bob Marley").change();'+
+                      '</script>'+
+                    '</div>'
 
                     counter2++;
                     $('#question'+ id +'_choice_group').append(choices);
@@ -108,34 +114,6 @@
                     var val = $(this).attr('value');
                      $('#' +val).remove();
                   });
-
-                  var timeoutId;
-                  $('#quiz_title').on('keypress', function () {
-                    var asd = $('#quiz_title').val();
-
-                    if (timeoutId) {clearTimeout(timeoutId)};
-                    timeoutId = setTimeout(function () {
-                        $.ajax({
-                          type: 'POST',
-                          url: 'add_quiz_title',
-                          data: { title:asd }
-                        });
-                    }, 750);
-                  });
-
-                  $('input[name=questions]').on('keypress', function () {
-                    var asd = $(this).val();
-
-                    if (timeoutId) {clearTimeout(timeoutId)};
-                    timeoutId = setTimeout(function () {
-                        $.ajax({
-                          type: 'POST',
-                          url: 'add_questions',
-                          data: { title:asd }
-                        });
-                    }, 750);
-                  });
-
 
               },
               onStepChanging: function (event, currentIndex, newIndex) {
@@ -161,8 +139,12 @@
               },
               onFinished: function (event, currentIndex) {
 
+                var asd = $('#wizard_with_validation').serializeJSON();
+                console.log(JSON.stringify(asd));
 
-                  //console.log(questions);
+
+                //
+                //   console.log(JSON.stringify(asd));
 
                   // $.ajax({
                   //   type:'POST',

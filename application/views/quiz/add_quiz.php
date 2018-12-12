@@ -13,8 +13,14 @@
                                   <fieldset>
                                       <div class="form-group form-float form-group-lg">
                                           <div class="form-line">
-                                              <input type="text" class="form-control" id="quiz_title" required>
+                                              <input type="text" class="form-control" name="quiz_title" required>
                                               <label class="form-label">Quiz Title*</label>
+                                          </div>
+                                      </div>
+                                      <div class="form-group form-float form-group-lg">
+                                          <div class="form-line">
+                                              <textarea class="form-control" name="quiz_info" rows="4" required></textarea>
+                                              <label class="form-label">Quiz Information*</label>
                                           </div>
                                       </div>
                                   </fieldset>
@@ -31,7 +37,7 @@
                                       <div id="question1" class="1">
                                         <div class="form-group form-float">
                                             <div class="form-line" style="margin-bottom: 5px">
-                                                <input type="text" name="questions" class="form-control" placeholder="Question*" required>
+                                                <input type="text" name="question1[question]" class="form-control" placeholder="Question*" required>
                                             </div>
                                         </div>
                                         <div id="question1_choice_group"></div>

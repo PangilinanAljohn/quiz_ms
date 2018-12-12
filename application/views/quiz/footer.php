@@ -27,6 +27,7 @@
 <script src="<?php echo base_url();?>includes/js/admin.js"></script>
 <script src="<?php echo base_url();?>includes/js/pages/index.js"></script>
 <script src="<?php echo base_url();?>includes/js/pages/forms/form-wizard.js"></script>
+<script src="<?php echo base_url();?>includes/js/pages/jquery.serializejson.js"></script>
 
 <!-- Demo Js -->
 <script src="<?php echo base_url();?>includes/js/demo.js"></script>
