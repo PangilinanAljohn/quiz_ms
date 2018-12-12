@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2018 at 12:59 AM
+-- Generation Time: Dec 12, 2018 at 07:45 PM
 -- Server version: 5.7.14
 -- PHP Version: 5.6.25
 
@@ -61,14 +61,6 @@ CREATE TABLE `questions` (
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `questions`
---
-
-INSERT INTO `questions` (`id`, `quiz_id`, `questions_details`, `InActive`, `date_added`) VALUES
-(91, 30, '12', 0, '2018-12-09 07:50:02'),
-(92, 31, 'asdasdasdasdasda', 0, '2018-12-09 07:50:40');
-
 -- --------------------------------------------------------
 
 --
@@ -78,19 +70,11 @@ INSERT INTO `questions` (`id`, `quiz_id`, `questions_details`, `InActive`, `date
 CREATE TABLE `quiz` (
   `id` int(11) NOT NULL,
   `quiz_name` varchar(50) NOT NULL,
+  `quiz_info` varchar(255) NOT NULL,
+  `q_per_page` int(10) NOT NULL,
   `InActive` int(50) NOT NULL DEFAULT '0',
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `quiz`
---
-
-INSERT INTO `quiz` (`id`, `quiz_name`, `InActive`, `date_added`) VALUES
-(28, 'xfadasds', 0, '2018-12-09 07:44:30'),
-(29, '', 0, '2018-12-09 07:44:38'),
-(30, '12', 0, '2018-12-09 07:45:33'),
-(31, 'qtqtqtqtqt', 0, '2018-12-09 07:50:35');
 
 -- --------------------------------------------------------
 
@@ -186,12 +170,12 @@ ALTER TABLE `prizes`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(50) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `quiz`
 --
 ALTER TABLE `quiz`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `respondent`
 --

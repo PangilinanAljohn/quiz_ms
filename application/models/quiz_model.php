@@ -40,6 +40,7 @@ class Quiz_model extends CI_Model{
     $quiz_data = array(
       'quiz_name' => $quiz['quiz_title'],
       'quiz_info' => $quiz['quiz_info'],
+      'q_per_page' => 10,
       'date_added' => date('Y-m-d h:i:s')
     );
 
