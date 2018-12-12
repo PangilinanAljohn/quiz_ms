@@ -25,8 +25,12 @@ class Quiz extends CI_Controller {
 		$this->load->view('quiz/add_quiz');
 	}
 
-	public function add_quiz_title(){
-		$quiz = $this->input->post('title');
+	public function add_quiz(){
+		$quiz = json_decode($this->input->post('quiz'), true);
+		//print_r($quiz['questions']);
+			// foreach($quiz['questions'] as $q){
+			// 	print_r($q['question']).'<br>';
+			// }
 
 		$this->quiz_model->add_quiz($quiz);
 	}

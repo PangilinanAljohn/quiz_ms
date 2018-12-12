@@ -5,28 +5,42 @@ class Quiz_model extends CI_Model{
 			parent::__construct();
 	}
 
-  public function add_quiz($title){
-    $data = array(
-      'quiz_name' => $title,
+  public function add_quiz($quiz){
+
+    $quiz_data = array(
+      'quiz_name' => $quiz['quiz_title'],
+      'quiz_info' => $quiz['quiz_info'],
       'date_added' => date('Y-m-d h:i:s')
     );
+    
+    $this->db->insert('quiz', $quiz_data);
 
-    $this->db->insert('quiz', $data);
-  }
+    $quiz_id = $this->db->insert_id();
 
-  public function add_question($title){
-    $this->db->select_max('id');
-    $query = $this->db->get('quiz');
+    foreach($quiz['questions'] as $q){
 
-    $quiz_id = $query->row('id');
+        $quiz_question = array(
+          'quiz_id' => $quiz_id,
+          'questions_details' => $q['question'],
+          'date_added' => date('Y-m-d h:i:s')
+        );
 
-    $data = array(
-      'quiz_id' => $quiz_id,
-      'questions_details' => $title,
-      'date_added' => date('Y-m-d h:i:s')
-    );
+        $this->db->insert('questions', $quiz_question);
 
-    $this->db->insert('questions', $data);
+        $question_id = $this->db->insert_id();
+
+        foreach ($q['choices'] as $a) {
+          $choice = array(
+            'question_id' => $question_id,
+            'choices_details' => $a,
+            'date_added' => date('Y-m-d h:i:s')
+          );
+
+          $this->db->insert('choices', $choice);
+
+        }
+    }
+
   }
 
   public function add($quiz, $question, $choice){

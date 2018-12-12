@@ -37,7 +37,7 @@
                                       <div id="question1" class="1">
                                         <div class="form-group form-float">
                                             <div class="form-line" style="margin-bottom: 5px">
-                                                <input type="text" name="question1[question]" class="form-control" placeholder="Question*" required>
+                                                <input type="text" name="questions[1][question]" class="form-control" placeholder="Question*" required>
                                             </div>
                                         </div>
                                         <div id="question1_choice_group"></div>

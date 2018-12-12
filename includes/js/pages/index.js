@@ -54,7 +54,7 @@
                     var question = '<div id="question'+ counter +'" class="'+ counter +'">'+
                       '<div class="form-group form-float">'+
                           '<div class="form-line" style="margin-bottom: 5px">'+
-                              '<input type="text" name="question'+ counter +'[question]" class="form-control" placeholder="Question*" required>'+
+                              '<input type="text" name="questions['+ counter +'][question]" class="form-control" placeholder="Question*" required>'+
                           '</div>'+
                       '</div>'+
                       '<div id="question'+ counter +'_choice_group">'+
@@ -86,19 +86,13 @@
                           '</span>'+
                           '<div class="col-md-8">'+
                             '<div class="form-line">'+
-                                '<input type="text" name="question'+ id +'[choices]['+ counter2 +']" class="form-control" placeholder="Choices*" required>'+
+                                '<input type="text" name="questions['+id+'][choices]['+ counter2 +']" class="form-control" placeholder="Choices*" required>'+
                             '</div>'+
                           '</div>'+
                           '<button value="question'+ id +'_choices'+ counter2 +'" type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float remove_choice">'+
                               '<i class="material-icons">clear</i>'+
                           '</button>'+
-                      '</div>'+
-                      '<script type="text/javascript">'+
-                      '$("#question'+ id +'[choices]['+ counter2 +']").bind("change paste keyup", function() {'+
-                      'var val = $(this).val();'+
-                      '$("#question'+ id +'_radio'+ counter2 +'").val(val);'+
-                      '}); $("#question'+ id +'[choices]['+ counter2 +']").val("Bob Marley").change();'+
-                      '</script>'+
+                      '</div>'
                     '</div>'
 
                     counter2++;
@@ -139,21 +133,18 @@
               },
               onFinished: function (event, currentIndex) {
 
-                var asd = $('#wizard_with_validation').serializeJSON();
-                console.log(JSON.stringify(asd));
-
-
-                //
-                //   console.log(JSON.stringify(asd));
-
-                  // $.ajax({
-                  //   type:'POST',
-                  //   url: 'add_quiz',
-                  //   data: {title:quiz, questions:JSON.stringify(questions), choices:JSON.stringify(choices)},
-                  //   success: function(data){
-                  //     swal("Quiz Successfully Added!", "", "success");
-                  //   }
-                  // });
+                var data = $('#wizard_with_validation').serializeJSON();
+                var json = JSON.stringify(data);
+                //console.log(data);
+                $.ajax({
+                  type:'POST',
+                  url: 'add_quiz',
+                  data: {quiz:json},
+                  success: function(data){
+                    swal("Quiz Successfully Added!", "", "success");
+                    location.reload();
+                  }
+                });
               }
           });
 
