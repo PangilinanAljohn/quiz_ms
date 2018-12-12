@@ -106,11 +106,11 @@
       ]
     });
 
-    $('#quiz_table tbody').on( 'click', '#edit', function () {
+    $('#quiz_table tbody').on( 'click', '#edit', function (e) {
       var data = $('#quiz_table').DataTable().row( $(this).parents('tr') ).data();
-      //alert(data[0]);
+      e.preventDefault();
       $.ajax({
-        url: "view_edit_quiz",
+        url: "<?=site_url()?>quiz/view_edit_quiz",
         type: "POST",
         data: { id:data[0] },
         success: function(data) {

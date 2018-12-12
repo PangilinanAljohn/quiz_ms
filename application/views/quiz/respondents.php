@@ -80,19 +80,21 @@
                                           </tr>
                                       </tfoot>
                                       <tbody>
-                                      <tr role="row" class="odd">
-                                              <td class="sorting_1">Airi Satou</td>
-                                              <td>Accountant</td>
-                                              <td>Tokyo</td>
-                                              <td>33</td>
-                                              <td>2008/11/28</td>
-                                              <td>
-                                                <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
-                                                    <a ><i class="material-icons">delete_forever</i></a>
-                                                </button>
-                                              </td>
+                                        <?php foreach ($respondent as $r):?>
+                                          <tr role="row" class="odd">
+                                            <td class="sorting_1"><?=$r->first_name?> <?=$r->middle_name?> <?=$r->last_name?></td>
+                                            <td><?=$r->contact_no?></td>
+                                            <td><?=$r->email?></td>
+                                            <td><?=$r->score?></td>
+                                            <td><?=$r->date_taken?></td>
+                                            <td>
+                                              <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
+                                                  <a ><i class="material-icons">delete_forever</i></a>
+                                              </button>
+                                            </td>
                                           </tr>
-                                        </tbody>
+                                        <?php endforeach?>
+                                      </tbody>
                                   </table>
                                 </div>
                           </div>

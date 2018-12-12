@@ -6,6 +6,7 @@ class Quiz extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library('pagination');
+		$this->load->library('session');
 		$this->load->model('quiz_model');
 	}
 
@@ -14,7 +15,8 @@ class Quiz extends CI_Controller {
 	}
 
 	public function respondents(){
-		$this->load->view('quiz/respondents');
+		$this->data['respondent'] = $this->quiz_model->get_respondents();
+		$this->load->view('quiz/respondents', $this->data);
 	}
 
 	public function get_all_quiz(){
@@ -85,6 +87,12 @@ class Quiz extends CI_Controller {
 		$this->quiz_model->edit_quiz_info($id, $info);
 	}
 
+	public function edit_quiz_no_page(){
+		$id = $this->input->post('id');
+		$info = $this->input->post('info');
+		$this->quiz_model->edit_quiz_no_page($id, $info);
+	}
+
 	public function edit_quiz_question(){
 		$id = $this->input->post('id');
 		$info = $this->input->post('info');
@@ -105,14 +113,6 @@ class Quiz extends CI_Controller {
 	public function delete_question(){
 		$id = $this->input->post('id');
 		$this->quiz_model->delete_question($id);
-	}
-
-	public function edit(){
-		$data = $this->input->post();
-		$table = $data['table_name'];
-		$params = $data['params'];
-
-		$this->quiz_model->edit($table, $params);
 	}
 
 	public function activate_quiz(){
@@ -145,14 +145,9 @@ class Quiz extends CI_Controller {
 		$config['first_tag_close'] = '</li>';
 		$config['last_tag_open'] = '<li>';
 		$config['last_tag_close'] = '</li>';
-
-
-
 		$config['prev_link'] = '<i class="fa fa-long-arrow-left"></i>Previous Page';
 		$config['prev_tag_open'] = '<li>';
 		$config['prev_tag_close'] = '</li>';
-
-
 		$config['next_link'] = 'Next Page<i class="fa fa-long-arrow-right"></i>';
 		$config['next_tag_open'] = '<li>';
 		$config['next_tag_close'] = '</li>';
@@ -165,6 +160,27 @@ class Quiz extends CI_Controller {
     $this->data['questions']= $this->quiz_model->get_questions($page, $segment);
 
     $this->load->view('quiz/exam', $this->data);
+	}
+
+	public function add_respondent(){
+		$id = $this->input->post('id');
+		$last_name = $this->input->post('last_name');
+		$first_name = $this->input->post('first_name');
+		$middle_name = $this->input->post('middle_name');
+		$score = $this->input->post('score');
+
+		$exist = $this->quiz_model->check_respondent($id, $last_name, $first_name, $middle_name);
+		if($exist){
+
+			$this->session->set_flashdata('message',"<div class='alert bg-pink alert-dismissible' role='alert'>
+					<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button>
+					You've been already taken the quiz. Your score is '.$exist->score.'
+			</div>");
+
+		} else {
+			$this->quiz_model->add_respondent($id, $first_name, $last_name, $middle_name, $score);
+		}
+		redirect('quiz/exam', $this->data);
 	}
 
 }

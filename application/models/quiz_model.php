@@ -85,6 +85,12 @@ class Quiz_model extends CI_Model{
     $this->db->update('quiz');
   }
 
+  public function edit_quiz_no_page($id, $info){
+    $this->db->where('id', $id);
+    $this->db->set('q_per_page', $info);
+    $this->db->update('quiz');
+  }
+
   public function edit_quiz_question($id, $info){
     $this->db->where('id', $id);
     $this->db->set('questions_details', $info);
@@ -111,10 +117,6 @@ class Quiz_model extends CI_Model{
     $this->db->delete('questions');
   }
 
-  public function edit($table, $data){
-    $this->db->update($table);
-  }
-
   public function activate_quiz($id){
     $this->db->where('id', $id);
     $this->db->set('InActive', 1);
@@ -136,9 +138,41 @@ class Quiz_model extends CI_Model{
   }
 
   public function get_per_page(){
-    //$this->db->where('InActive', 1);
     $query = $this->db->get('quiz');
 
     return $query->row();
+  }
+
+  public function check_respondent($id, $last_name, $first_name, $middle_name){
+    $this->db->where(array(
+      'quiz_id' => $id,
+      'last_name' => $last_name,
+      'first_name' => $first_name,
+      'middle_name' => $middle_name
+    ));
+    $query = $this->db->get('respondent');
+
+    return $query->row();
+  }
+
+  public function add_respondent($id, $first_name, $last_name, $middle_name, $score){
+    $data = array(
+      'last_name' => $last_name,
+      'first_name' => $first_name,
+      'middle_name' => $middle_name,
+      'email' => 'email@admin.com',
+      'contact_no' => 1234567,
+      'score' => $score,
+      'quiz_id' => $id,
+      'date_taken' => date('Y-m-d h:i:s')
+    );
+    $this->db->insert('respondent', $data);
+  }
+
+  public function get_respondents(){
+    $this->db->join('quiz B', 'A.quiz_id = B.id');
+    $query = $this->db->get('respondent A');
+
+    return $query->result();
   }
 }

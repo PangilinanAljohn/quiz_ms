@@ -13,7 +13,15 @@
                 <div class="col-sm-8">
                     <div class="form-group form-group-sm">
                         <div class="form-line">
-                            <input id="edit_info" onkeyup="edit_quiz_info('<?=$quiz_info->id?>')" type="text" class="form-control" placeholder="Quiz Title" value="<?=$quiz_info->quiz_info?>"/>
+                            <input id="edit_info" onkeyup="edit_quiz_info('<?=$quiz_info->id?>')" type="text" class="form-control" placeholder="Quiz Information" value="<?=$quiz_info->quiz_info?>"/>
+                        </div>
+                    </div>
+                </div>
+                <br><br><br><br>
+                <div class="col-sm-8">
+                    <div class="form-group form-group-sm">
+                        <div class="form-line">
+                            <input id="edit_no_page" onkeyup="edit_no_page('<?=$quiz_info->id?>')" type="text" class="form-control" placeholder="Quiz Title" value="<?=$quiz_info->q_per_page?>"/>
                         </div>
                     </div>
                 </div>
@@ -41,11 +49,9 @@
                         </h4><br><br><br><br><br>
                         <?php $choices = $this->quiz_model->get_choices($question->id);?>
                         <?php foreach($choices as $c):?>
-                          <?php if($c->answer == 1){?>
-                          <input onchange="set_correct_answer('<?=$c->id?>');" name="<?=$question->questions_details?>" type="radio" id="<?=$c->choices_details?>" class="radio-col-red" checked="">
-                        <?php } else {?>
+
                           <input onchange="set_correct_answer('<?=$c->id?>');" name="<?=$question->questions_details?>" type="radio" id="<?=$c->choices_details?>" class="radio-col-red">
-                        <?php }?>
+
                           <label for="<?=$c->choices_details?>">
                             <div class="col-md-12">
                                 <div class="form-group form-group-sm">
@@ -65,7 +71,7 @@
     </div>
 </div>
 <!-- #END# Default Media -->
-<script>
+<script type="text/javascript">
   function set_correct_answer(id){
     $.ajax({
       url: '<?=site_url()?>quiz/set_correct_answer',
@@ -99,6 +105,21 @@
     var info = $('#edit_info').val();
     $.ajax({
       url: '<?=site_url()?>quiz/edit_quiz_info',
+      type: "POST",
+      data: { id:id , info:info},
+    });
+  }
+
+  function edit_no_page(id){
+    clearTimeout($.data(this, 'timer'));
+    var wait = setTimeout(edit_q_no_page(id), 500);
+    $(this).data('timer', wait);
+  };
+
+  function edit_q_no_page(id) {
+    var info = $('#edit_no_page').val();
+    $.ajax({
+      url: '<?=site_url()?>quiz/edit_quiz_no_page',
       type: "POST",
       data: { id:id , info:info},
     });
