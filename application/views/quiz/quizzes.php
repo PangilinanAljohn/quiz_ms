@@ -60,44 +60,29 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table id="quiz_table" class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                         <tr>
-                                          <th>Quiz No.</th>
-                                          <th>Title</th>
+                                          <th>ID</th>
+                                          <th>Quiz Title.</th>
+                                          <th>Info</th>
                                           <th>No. of Question</th>
+                                          <th>Date Created</th>
                                           <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                          <th>Quiz No.</th>
-                                          <th>Title</th>
+                                          <th>ID</th>
+                                          <th>Quiz Title.</th>
+                                          <th>Info</th>
                                           <th>No. of Question</th>
+                                          <th>Date Created</th>
                                           <th>Action</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                    <tr role="row" class="odd">
-                                            <td class="sorting_1">Airi Satou</td>
-                                            <td>Accountant</td>
-                                            <td>2008/11/28</td>
-                                            <td>
-                                              <button type="button" class="btn bg-yellow btn-circle waves-effect waves-circle waves-float">
-                                                  <i class="material-icons">mode_edit</i>
-                                              </button>
-                                              <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
-                                                  <i class="material-icons">delete_forever</i>
-                                              </button>
-                                              <button type="button" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
-                                                  <i class="material-icons">power_settings_newr</i>
-                                              </button>
-                                              <button type="button" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
-                                                  <i class="material-icons">power_settings_newr</i>
-                                              </button>
-                                            </td>
-                                        </tr>
-                                      </tbody>
+                                    </tbody>
                                 </table>
                               </div>
                           </div>
@@ -107,4 +92,67 @@
         </div>
     </section>
 
-<?php $this->load->view('quiz/footer');?>
+  <?php $this->load->view('quiz/footer');?>
+  <script type="text/javascript">
+    $('#quiz_table').DataTable({
+      ajax: {
+        "url": '<?=site_url()?>quiz/get_all_quiz',
+        "type": "POST"
+      },
+      dom: 'Bfrtip',
+      responsive: true,
+      buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    });
+
+    $('#quiz_table tbody').on( 'click', '#edit', function () {
+      var data = $('#quiz_table').DataTable().row( $(this).parents('tr') ).data();
+      //alert(data[0]);
+      $.ajax({
+        url: "view_edit_quiz",
+        type: "POST",
+        data: { id:data[0] },
+        success: function(data) {
+          $('#add_edit').html(data);
+
+          $('#close_add').on('click', function(e){
+            e.preventDefault();
+            $('.edit_quiz').remove();
+          });
+        }
+      });
+    });
+
+    $('#quiz_table tbody').on( 'click', '#delete', function () {
+      var data = $('#quiz_table').DataTable().row( $(this).parents('tr') ).data();
+      //alert(data[0]);
+      swal("Quiz Successfully Deleted!", "", "success");
+    });
+
+    $('#quiz_table tbody').on( 'click', '#activate', function () {
+      var data = $('#quiz_table').DataTable().row( $(this).parents('tr') ).data();
+      $.ajax({
+        url: '<?=site_url()?>quiz/activate_quiz',
+        type: "POST",
+        data: { id:data[0] },
+        success: function(){
+          swal("Quiz Successfully Activated!", "", "success");
+          $('#quiz_table').DataTable().ajax.reload();
+        }
+      });
+    });
+
+    $('#quiz_table tbody').on( 'click', '#deactivate', function () {
+      var data = $('#quiz_table').DataTable().row( $(this).parents('tr') ).data();
+      $.ajax({
+        url: '<?=site_url()?>quiz/deactivate_quiz',
+        type: "POST",
+        data: { id:data[0] },
+        success: function(){
+          swal("Quiz Successfully Dectivated!", "", "error");
+          $('#quiz_table').DataTable().ajax.reload();
+        }
+      });
+    });
+  </script>

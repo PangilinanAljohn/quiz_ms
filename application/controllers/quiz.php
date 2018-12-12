@@ -5,7 +5,7 @@ class Quiz extends CI_Controller {
 
 	public function __construct() {
 		parent::__construct();
-
+		$this->load->library('pagination');
 		$this->load->model('quiz_model');
 	}
 
@@ -15,6 +15,41 @@ class Quiz extends CI_Controller {
 
 	public function respondents(){
 		$this->load->view('quiz/respondents');
+	}
+
+	public function get_all_quiz(){
+		$m_data = $this->quiz_model->get_all_quiz();
+		$data = array();
+
+		foreach ($m_data as $value) {
+				$row = array();
+				$row[] = $value->id;
+				$row[] = $value->quiz_name;
+				$row[] = $value->quiz_info;
+				$row[] = $value->questions;
+				$row[] = $value->date_added;
+				if($value->InActive == 0){
+					$row[] = '<button type="button" id="edit" class="btn bg-yellow btn-circle waves-effect waves-circle waves-float">
+												<i class="material-icons">mode_edit</i>
+										</button>
+										<button type="button" id="delete" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
+												<i class="material-icons">delete_forever</i>
+										</button>
+										<button type="button" id="activate" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+												<i class="material-icons">power_settings_newr</i>
+										</button>';
+				}else{
+					$row[] = '<button type="button" id="deactivate" class="btn bg-red btn-circle waves-effect waves-circle waves-float">
+												<i class="material-icons">power_settings_newr</i>
+										</button>';
+				}
+				$data[] = $row;
+			}
+			$result = array(
+				"data" => $data,
+			);
+
+		echo json_encode($result);
 	}
 
 	public function manage_quiz(){
@@ -27,18 +62,49 @@ class Quiz extends CI_Controller {
 
 	public function add_quiz(){
 		$quiz = json_decode($this->input->post('quiz'), true);
-		//print_r($quiz['questions']);
-			// foreach($quiz['questions'] as $q){
-			// 	print_r($q['question']).'<br>';
-			// }
-
 		$this->quiz_model->add_quiz($quiz);
 	}
 
-	public function add_questions(){
-		$quiz = $this->input->post('title');
+	public function view_edit_quiz(){
+		$id = $this->input->post('id');
+		$this->data['quiz_info'] = $this->quiz_model->get_quiz_info($id);
+		$this->data['quiz_question'] = $this->quiz_model->get_quiz_question($id);
 
-		$this->quiz_model->add_question($quiz);
+		$this->load->view('quiz/edit_quiz', $this->data);
+	}
+
+	public function edit_quiz_title(){
+		$id = $this->input->post('id');
+		$name = $this->input->post('name');
+		$this->quiz_model->edit_quiz_title($id, $name);
+	}
+
+	public function edit_quiz_info(){
+		$id = $this->input->post('id');
+		$info = $this->input->post('info');
+		$this->quiz_model->edit_quiz_info($id, $info);
+	}
+
+	public function edit_quiz_question(){
+		$id = $this->input->post('id');
+		$info = $this->input->post('info');
+		$this->quiz_model->edit_quiz_question($id, $info);
+	}
+
+	public function edit_quiz_choice(){
+		$id = $this->input->post('id');
+		$info = $this->input->post('info');
+		$this->quiz_model->edit_quiz_choice($id, $info);
+	}
+
+	public function set_correct_answer(){
+		$id = $this->input->post('id');
+		$this->quiz_model->set_correct_answer($id);
+	}
+
+	public function delete_question(){
+		$id = $this->input->post('id');
+		$this->quiz_model->delete_question($id);
 	}
 
 	public function edit(){
@@ -49,8 +115,56 @@ class Quiz extends CI_Controller {
 		$this->quiz_model->edit($table, $params);
 	}
 
-	public function delete(){
+	public function activate_quiz(){
+		$id = $this->input->post('id');
+		$this->quiz_model->activate_quiz($id);
+	}
 
+	public function deactivate_quiz(){
+		$id = $this->input->post('id');
+		$this->quiz_model->deactivate_quiz($id);
+	}
+
+	public function exam(){
+		$this->data['quiz'] = $this->quiz_model->get_per_page();
+		$config ['base_url'] = base_url().'quiz/exam/';
+    $config ['total_rows'] = $this->db->get('questions')->num_rows();
+    $config ['uri_segment'] = 3;
+    $config ['per_page'] = $this->data['quiz']->q_per_page;
+    $config ['num_links'] = 10;
+
+		$config['full_tag_open'] = "<ul class='pagination'>";
+		$config['full_tag_close'] = '</ul>';
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="waves-effect"><a href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_tag_close'] = '</li>';
+		$config['first_tag_open'] = '<li>';
+		$config['first_tag_close'] = '</li>';
+		$config['last_tag_open'] = '<li>';
+		$config['last_tag_close'] = '</li>';
+
+
+
+		$config['prev_link'] = '<i class="fa fa-long-arrow-left"></i>Previous Page';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_tag_close'] = '</li>';
+
+
+		$config['next_link'] = 'Next Page<i class="fa fa-long-arrow-right"></i>';
+		$config['next_tag_open'] = '<li>';
+		$config['next_tag_close'] = '</li>';
+
+    $this->pagination->initialize($config);
+
+    $page = $config ['per_page']; // how many number of records on page
+    $segment = $this->uri->segment ( 3 ); // from which index I have to count $page number of records
+
+    $this->data['questions']= $this->quiz_model->get_questions($page, $segment);
+
+    $this->load->view('quiz/exam', $this->data);
 	}
 
 }

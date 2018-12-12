@@ -135,14 +135,15 @@
 
                 var data = $('#wizard_with_validation').serializeJSON();
                 var json = JSON.stringify(data);
-                //console.log(data);
+
                 $.ajax({
                   type:'POST',
                   url: 'add_quiz',
                   data: {quiz:json},
                   success: function(data){
                     swal("Quiz Successfully Added!", "", "success");
-                    location.reload();
+                    $('.add_quiz').remove();
+                    $('#quiz_table').DataTable().ajax.reload();
                   }
                 });
               }
